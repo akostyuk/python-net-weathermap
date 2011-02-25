@@ -39,7 +39,7 @@ class TestNode(unittest.TestCase):
         self.map.draw_labels()
 
     def testSaveImage(self):
-        self.map.save('/home/unit/Desktop/map.png')
+        self.map.save('map.png')
 
     def testNewSaveImage(self):
         a = Node(x=40,y=240,color='#00FF00',label='Point A')
