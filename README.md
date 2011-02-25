@@ -13,7 +13,7 @@ and [py-rrdtool][2] Python Interface to RRDTool
 
 ## Usage
 
-        from pymaps import Node, Link, Map
+        from net_weathermap import Node, Link, Map
         
         # First, we need to define our nodes
         a = Node(x=40,y=240,label='Device A')
