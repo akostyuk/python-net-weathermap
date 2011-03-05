@@ -32,13 +32,16 @@ from tools import Pallete
 class Node:
     ''' Node (device) on a map '''
     def __init__(self, x=0, y=0, color='#ffffff', fontcolor='#000000',
-                 fontbgcolor='#FFFFFF', label=None):
+                 fontbgcolor='#FFFFFF', fontsize=11, padding=1, label=None):
         self.x = float(x)
         self.y = float(y)
         self.color = color
         self.fontcolor = fontcolor
         self.fontbgcolor = fontbgcolor
+        self.fontsize = fontsize
+        self.padding = padding
         self.label = label
+        self.points = None
 
 
 class Link:
@@ -252,6 +255,7 @@ class Map:
         self.image = image
         self.surface = self.__surface()
         self.context = self.__context()
+        self.nodes = self._nodes()
 
     def _hex_to_rgb(self,c):
         '''
@@ -280,6 +284,18 @@ class Map:
             context.set_source_rgb(1,1,1)
             context.paint()
         return context
+
+    def _nodes(self):
+        '''
+        Return all nodes
+        '''
+        node_list = []
+        for link in self.links:
+            if link.nodea not in node_list:
+                node_list.append(link.nodea)
+            if link.nodeb not in node_list:
+                node_list.append(link.nodeb)
+        return node_list
 
     def _draw_polygon(self,points,width,color):
         '''
@@ -316,6 +332,9 @@ class Map:
         @param bold: text style bold - True\False
         @param color: text color
         @param bgcolor: background color
+        
+        This method returns coordinates (4 points) of the label box
+        
         '''
         # Draw rectangle
         if font is None:
@@ -330,10 +349,9 @@ class Map:
         fhw = self.context.text_extents(label)
         strwidth = fhw[2] + padding * 2 + 2
         strheight = fhw[3] + padding * 2 + 2
-        self.context.rectangle(
-                    x-strwidth/2-padding-1,y-strheight/2-padding+1,
-                    strwidth,strheight,
-                    )
+        x = x-strwidth/2-padding-1
+        y = y-strheight/2-padding+1
+        self.context.rectangle(x,y,strwidth,strheight)
         stroke_color = self._hex_to_rgb(color)
         self.context.set_source_rgb(stroke_color[0],stroke_color[1],
                                     stroke_color[2])
@@ -349,6 +367,8 @@ class Map:
         text_color = self._hex_to_rgb(color)
         self.context.set_source_rgb(text_color[0], text_color[1], text_color[2])
         self.context.show_text(label)
+        points = [(x,y),(x+strwidth,y),(x+strwidth,y+strheight),(x,y+strheight)]
+        return points
 
     def draw_grid(self):
         w = self.surface.get_width()
@@ -375,30 +395,13 @@ class Map:
         ''' Draw labels method'''
         if nodes is not None:
             for node in nodes:
-                self._name(node.x,node.y,node.label, padding=padding,
+                node.points = self._name(node.x,node.y,node.label, padding=padding,
                 color=node.fontcolor, bgcolor=node.fontbgcolor)
         else:
-            for link in self.links:
-                self._name(
-                       x=link.nodea.x,
-                       y=link.nodea.y,
-                       label=link.nodea.label,
-                       width = link.width,
-                       padding=padding,
-                       size=11,
-                       color=link.nodea.fontcolor,
-                       bgcolor=link.nodea.fontbgcolor,
-                       )
-                self._name(
-                       x=link.nodeb.x,
-                       y=link.nodeb.y,
-                       label=link.nodeb.label,
-                       width = link.width,
-                       padding=padding,
-                       size=11,
-                       color=link.nodeb.fontcolor,
-                       bgcolor=link.nodeb.fontbgcolor,
-                       )
+            for node in self.nodes:
+                node.points = self._name(node.x, node.y, node.label, padding=node.padding,
+                           size=node.fontsize, color=node.fontcolor,
+                           bgcolor=node.fontbgcolor)
 
     def save(self,path):
         '''
