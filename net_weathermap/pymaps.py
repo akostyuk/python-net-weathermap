@@ -349,9 +349,9 @@ class Map:
         fhw = self.context.text_extents(label)
         strwidth = fhw[2] + padding * 2 + 2
         strheight = fhw[3] + padding * 2 + 2
-        x = x-strwidth/2-padding-1
-        y = y-strheight/2-padding+1
-        self.context.rectangle(x,y,strwidth,strheight)
+        x1 = x-strwidth/2-padding-1
+        y1 = y-strheight/2-padding+1
+        self.context.rectangle(x1,y1,strwidth,strheight)
         stroke_color = self._hex_to_rgb(color)
         self.context.set_source_rgb(stroke_color[0],stroke_color[1],
                                     stroke_color[2])
@@ -367,7 +367,7 @@ class Map:
         text_color = self._hex_to_rgb(color)
         self.context.set_source_rgb(text_color[0], text_color[1], text_color[2])
         self.context.show_text(label)
-        points = [(x,y),(x+strwidth,y),(x+strwidth,y+strheight),(x,y+strheight)]
+        points = [(x1,y1),(x1+strwidth,y1),(x1+strwidth,y1+strheight),(x1,y1+strheight)]
         return points
 
     def draw_grid(self):
