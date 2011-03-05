@@ -32,7 +32,8 @@ from tools import Pallete
 class Node:
     ''' Node (device) on a map '''
     def __init__(self, x=0, y=0, color='#ffffff', fontcolor='#000000',
-                 fontbgcolor='#FFFFFF', fontsize=11, padding=1, label=None):
+                 fontbgcolor='#FFFFFF', fontsize=11, padding=1, label=None
+                 **kwargs):
         self.x = float(x)
         self.y = float(y)
         self.color = color
@@ -42,6 +43,7 @@ class Node:
         self.padding = padding
         self.label = label
         self.points = None
+        self.kwargs = kwargs
 
 
 class Link:
