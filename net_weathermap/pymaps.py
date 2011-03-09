@@ -369,7 +369,11 @@ class Map:
         text_color = self._hex_to_rgb(color)
         self.context.set_source_rgb(text_color[0], text_color[1], text_color[2])
         self.context.show_text(label)
-        points = [(x1,y1),(x1+strwidth,y1),(x1+strwidth,y1+strheight),(x1,y1+strheight)]
+        points = [(x1,y1),
+          (x1+strwidth,y1),
+          (x1+strwidth,y1+strheight),
+          (x1,y1+strheight),
+          ]
         return points
 
     def draw_grid(self):
